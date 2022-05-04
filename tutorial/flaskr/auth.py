@@ -54,9 +54,9 @@ def register():
     if request.method == "POST":
         fname = request.form["firstname"]
         lname = request.form["lastname"]
-        email = request.form["email"]
         username = request.form["username"]
         password = request.form["password"]
+        balance = request.form["balance"]
 
 
         db = get_db()
@@ -70,17 +70,21 @@ def register():
             error = "First Name is required!"
         elif not lname:
             error = "Last Name is required!"
-        elif not email:
-            error = "Email is required!"
+        elif not balance:
+            error = "Initial Balance is required!"
+        elif verify_bal(balance) == False:
+            error = "Initial Balance is not valid!"
         elif db.execute(
                 'SELECT accid FROM bankacc WHERE username = ?', (username,)
         ).fetchone() is not None:
             error = 'User {} is already registered!'.format(username)
 
         if len(username) > 127:
-            error = "Username too long"
+            error = "Username too long!"
         elif len(password) > 127:
-            error = "Password too long"
+            error = "Password too long!"
+
+
 
         regex = re.compile("[_\\-\\.0-9a-z]+")
         unamereg = regex.fullmatch(username)
@@ -93,8 +97,8 @@ def register():
         if error is None:
             try:
                 db.execute(
-                    "INSERT INTO bankacc (first_name,last_name,email,username, password) VALUES (?, ?, ?, ?, ?)",
-                    (fname,lname,email, username, generate_password_hash(password)),
+                    "INSERT INTO bankacc (first_name,last_name,username, password, balance) VALUES (?, ?, ?, ?, ?)",
+                    (fname,lname, username, generate_password_hash(password),balance)
                 )
                 db.commit()
             except db.IntegrityError:
@@ -148,6 +152,14 @@ def login():
                     return redirect(url_for('index'))
 
     return render_template("auth/login.html")
+
+def verify_bal(balance):
+    bal_pattern = re.compile('(0|[1-9][0-9]*)(\\.[0-9]{2})?')
+    balmatch = bal_pattern.fullmatch(balance)
+    if balmatch is None:
+        return False
+    else:
+        return True
 
 
 @bp.route("/logout")

@@ -8,9 +8,9 @@ CREATE TABLE bankacc (
   accid INTEGER PRIMARY KEY AUTOINCREMENT,
   first_name VARCHAR(50) NOT NULL,
   last_name VARCHAR (50) NOT NULL,
-  email VARCHAR(30),
   username TEXT UNIQUE NOT NULL,
-  password TEXT NOT NULL
+  password TEXT NOT NULL,
+  balance DECIMAL(15,2) NOT NULL
 );
 
 CREATE TABLE post (

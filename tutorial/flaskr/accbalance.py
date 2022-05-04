@@ -1,0 +1,142 @@
+from flask import Blueprint
+from flask import flash
+from flask import g
+from flask import redirect
+from flask import render_template
+from flask import request
+from flask import url_for
+import re
+from werkzeug.exceptions import abort
+
+from flaskr.auth import login_required
+from flaskr.db import get_db
+
+bp = Blueprint("account", __name__)
+
+
+@bp.route("/")
+def index():
+    """Show all the posts, most recent first."""
+    db = get_db()
+    if g.user is not None:
+        account = db.execute(
+            "SELECT balance FROM bankacc WHERE accid =  ?", (g.user['accid'],)
+        ).fetchall()
+    return render_template("blog/index.html", account=account)
+
+
+def get_account(id, check_author=True):
+    """Get a post and its author by id.
+
+    Checks that the id exists and optionally that the current user is
+    the author.
+
+    :param id: id of post to get
+    :param check_author: require the current user to be the author
+    :return: the post with author information
+    :raise 404: if a post with the given id doesn't exist
+    :raise 403: if the current user isn't the author
+    """
+    account = (
+        get_db()
+        .execute(
+            "SELECT balance FROM bankacc WHERE accid =  ?",
+            (id,)
+        )
+        .fetchone()
+    )
+
+    # if post is None:
+    #     abort(404, f"Post id {id} doesn't exist.")
+    #
+    # if check_author and post["author_id"] != g.user["id"]:
+    #     abort(403)
+
+    return account
+
+
+# @bp.route("/create", methods=("GET", "POST"))
+# @login_required
+# def create():
+#     """Create a new post for the current user."""
+#     if request.method == "POST":
+#         init_balance = request.form["balance"]
+#         error = None
+#
+#         if not init_balance:
+#             error = "Title is required."
+#
+#         if error is not None:
+#             flash(error)
+#         else:
+#             db = get_db()
+#             db.execute(
+#                 "INSERT INTO post (title, body, author_id) VALUES (?, ?, ?)",
+#                 (title, body, g.user["id"]),
+#             )
+#             db.commit()
+#             return redirect(url_for("blog.index"))
+#
+#     return render_template("blog/create.html")
+
+
+@bp.route("/<int:id>/update", methods=("GET", "POST"))
+@login_required
+def update(id):
+    """Update a post if the current user is the author."""
+    balance = get_db().execute(
+            "SELECT balance FROM bankacc WHERE accid =  ?",
+            (id,)
+        ).fetchone()
+
+    if request.method == "POST":
+        amount = request.form["amount"]
+        error = None
+
+        if not amount:
+            error = "An amount is required."
+
+        if verify_amount(amount)== False:
+            error = "Invalid amount entered!"
+
+        if request.form['update'] == "Withdraw":
+            result= balance - float(amount)
+            if(result < 0):
+                error = "Withdrawn amount is more than current balance!"
+        elif request.form['update'] == "Deposit":
+            result = balance + float(amount)
+
+        if error is not None:
+            flash(error)
+        else:
+            db = get_db()
+            db.execute(
+                "UPDATE bankacc SET balance = ? WHERE id = ?", (result, id)
+            )
+            db.commit()
+            return redirect(url_for("accbalance.index"))
+
+    return render_template("blog/update.html", account=balance)
+
+
+# @bp.route("/<int:id>/delete", methods=("POST",))
+# @login_required
+# def delete(id):
+#     """Delete a post.
+#
+#     Ensures that the post exists and that the logged in user is the
+#     author of the post.
+#     """
+#     get_post(id)
+#     db = get_db()
+#     db.execute("DELETE FROM bankacc WHERE id = ?", (id,))
+#     db.commit()
+#     return redirect(url_for("accbalance.index"))
+
+def verify_amount(amount):
+    amt_pattern = re.compile('(0|[1-9][0-9]*)(\\.[0-9]{2})?')
+    amtmatch = amt_pattern.fullmatch(amount)
+    if amtmatch is None:
+        return False
+    else:
+        return True
