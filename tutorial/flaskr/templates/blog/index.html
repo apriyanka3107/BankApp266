@@ -1,18 +1,21 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Welcome to Bank 266P{% endblock %}</h1>
+    {% for account in account %}
+    <h1>{% block title %}Accounts{% endblock %}</h1>
+    {% if g.user %}
+        <a class="action" href="{{ url_for('account.update', id=account['accid']) }}">Withdraw|Deposit</a>
+    {% endif %}
+    {% endfor %}
 {% endblock %}
 
 {% block content %}
+{% for account in account %}
     <article class="account">
-      <header>
-          <a class="action" href="{{ url_for('accbalance.update'}}, id = account">Click Here to Withdraw or Deposit</a>
-        {% endif %}
-      </header>
-      <p class="body">{{ account }}</p>
+        <p class="body">${{ account['balance'] }}</p>
     </article>
-      <hr>
+    {% if not loop.last %}
+        <hr>
     {% endif %}
-  {% endfor %}
+{% endfor %}
 {% endblock %}

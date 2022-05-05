@@ -18,11 +18,13 @@ bp = Blueprint("account", __name__)
 def index():
     """Show all the posts, most recent first."""
     db = get_db()
+    accountdet=[]
     if g.user is not None:
         account = db.execute(
-            "SELECT balance FROM bankacc WHERE accid =  ?", (g.user['accid'],)
-        ).fetchall()
-    return render_template("blog/index.html", account=account)
+            "SELECT accid,balance FROM bankacc WHERE accid =  ?", (g.user['accid'],)
+        ).fetchone()
+        accountdet.append(account)
+    return render_template("blog/index.html", account=accountdet)
 
 
 def get_account(id, check_author=True):
@@ -40,7 +42,7 @@ def get_account(id, check_author=True):
     account = (
         get_db()
         .execute(
-            "SELECT balance FROM bankacc WHERE accid =  ?",
+            "SELECT accid, balance FROM bankacc WHERE accid =  ?",
             (id,)
         )
         .fetchone()
@@ -84,10 +86,7 @@ def get_account(id, check_author=True):
 @login_required
 def update(id):
     """Update a post if the current user is the author."""
-    balance = get_db().execute(
-            "SELECT balance FROM bankacc WHERE accid =  ?",
-            (id,)
-        ).fetchone()
+    account = get_account(id)
 
     if request.method == "POST":
         amount = request.form["amount"]
@@ -99,6 +98,7 @@ def update(id):
         if verify_amount(amount)== False:
             error = "Invalid amount entered!"
 
+        balance = account['balance']
         if request.form['update'] == "Withdraw":
             result= balance - float(amount)
             if(result < 0):
@@ -111,12 +111,12 @@ def update(id):
         else:
             db = get_db()
             db.execute(
-                "UPDATE bankacc SET balance = ? WHERE id = ?", (result, id)
+                "UPDATE bankacc SET balance = ? WHERE accid = ?", (result, id)
             )
             db.commit()
-            return redirect(url_for("accbalance.index"))
+            return redirect(url_for("account.index"))
 
-    return render_template("blog/update.html", account=balance)
+    return render_template("blog/update.html", account=account)
 
 
 # @bp.route("/<int:id>/delete", methods=("POST",))

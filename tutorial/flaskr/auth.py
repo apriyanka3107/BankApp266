@@ -32,16 +32,14 @@ def login_required(view):
 
 @bp.before_app_request
 def load_logged_in_user():
-    """If a user id is stored in the session, load the user object from
-    the database into ``g.user``."""
-    acc_id = session.get("acc_id")
 
+    acc_id = session.get("acc_id")
     if acc_id is None:
         g.user = None
     else:
-        g.user = (
-            get_db().execute("SELECT * FROM bankacc WHERE accid = ?", (acc_id,)).fetchone()
-        )
+        g.user = get_db().execute(
+            "SELECT * FROM bankacc WHERE accid = ?", (acc_id,)).fetchone()
+
 
 
 @bp.route("/register", methods=("GET", "POST"))
@@ -51,6 +49,7 @@ def register():
     Validates that the username is not already taken. Hashes the
     password for security.
     """
+    session.clear()
     if request.method == "POST":
         fname = request.form["firstname"]
         lname = request.form["lastname"]
@@ -104,7 +103,7 @@ def register():
             except db.IntegrityError:
                 # The username was already taken, which caused the
                 # commit to fail. Show a validation error.
-                error = f"User {username} is already registered."
+                error = f"User {username} is already registered!"
             else:
                 # Success, go to the login page.
                 return redirect(url_for("auth.login"))
@@ -133,7 +132,6 @@ def login():
             error = "Incorrect password."
 
         if error is None:
-            # store the user id in a new session and return to the index
             session.clear()
             session["acc_id"] = user["accid"]
             return redirect(url_for("index"))
