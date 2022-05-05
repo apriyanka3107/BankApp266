@@ -57,31 +57,6 @@ def get_account(id, check_author=True):
     return account
 
 
-# @bp.route("/create", methods=("GET", "POST"))
-# @login_required
-# def create():
-#     """Create a new post for the current user."""
-#     if request.method == "POST":
-#         init_balance = request.form["balance"]
-#         error = None
-#
-#         if not init_balance:
-#             error = "Title is required."
-#
-#         if error is not None:
-#             flash(error)
-#         else:
-#             db = get_db()
-#             db.execute(
-#                 "INSERT INTO post (title, body, author_id) VALUES (?, ?, ?)",
-#                 (title, body, g.user["id"]),
-#             )
-#             db.commit()
-#             return redirect(url_for("blog.index"))
-#
-#     return render_template("blog/create.html")
-
-
 @bp.route("/<int:id>/update", methods=("GET", "POST"))
 @login_required
 def update(id):
@@ -117,21 +92,6 @@ def update(id):
             return redirect(url_for("account.index"))
 
     return render_template("blog/update.html", account=account)
-
-
-# @bp.route("/<int:id>/delete", methods=("POST",))
-# @login_required
-# def delete(id):
-#     """Delete a post.
-#
-#     Ensures that the post exists and that the logged in user is the
-#     author of the post.
-#     """
-#     get_post(id)
-#     db = get_db()
-#     db.execute("DELETE FROM bankacc WHERE id = ?", (id,))
-#     db.commit()
-#     return redirect(url_for("accbalance.index"))
 
 def verify_amount(amount):
     amt_pattern = re.compile('(0|[1-9][0-9]*)(\\.[0-9]{2})?')
