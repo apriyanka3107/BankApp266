@@ -77,8 +77,8 @@ def update(id):
                 result= balance - float(amount)
                 if(result < 0):
                     error = "Withdrawn amount is more than current balance!"
-            elif request.form['update'] == "Deposit":
-                result = balance + float(amount)
+            # elif request.form['update'] == "Deposit":
+            #     result = balance + float(amount)
 
         if error is not None:
             flash(error)
@@ -91,6 +91,37 @@ def update(id):
             return redirect(url_for("account.index"))
 
     return render_template("blog/update.html", account=account)
+
+@bp.route("/<int:id>/update2", methods=("GET", "POST"))
+@login_required
+def deposit(id):
+    """Update a post if the current user is the author."""
+    account = get_account(id)
+
+    if request.method == "POST":
+        amount = request.form["amount"]
+        error = None
+
+        if not amount:
+            error = "An amount is required."
+        elif verify_amount(amount)== False:
+            error = "Invalid amount entered!"
+        else:
+            balance = account['balance']
+            if request.form['update2'] == "Deposit":
+                result = balance + float(amount)
+
+        if error is not None:
+            flash(error)
+        else:
+            db = get_db()
+            db.execute(
+                "UPDATE bankacc SET balance = ? WHERE accid = ?", (result, id)
+            )
+            db.commit()
+            return redirect(url_for("account.index"))
+
+    return render_template("blog/update2.html", account=account)
 
 def verify_amount(amount):
     amt_pattern = re.compile('(0|[1-9][0-9]*)(\\.[0-9]{2})?')

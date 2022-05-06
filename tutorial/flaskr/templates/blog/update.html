@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Withdraw or Deposit{% endblock %}</h1>
+  <h1>{% block title %}Withdraw{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
@@ -9,7 +9,7 @@
       <label for="amount">Amount</label>
     <input name="amount" id="amount" value="{{ request.form['amount'] }}" required>
     <input type="submit" name = "update" value="Withdraw">
-    <input type="submit" name = "update" value="Deposit">
+<!--    <input type="submit" name = "update" value="Deposit">-->
   </form>
   <hr>
 
