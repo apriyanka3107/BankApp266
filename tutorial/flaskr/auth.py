@@ -57,7 +57,6 @@ def register():
         password = request.form["password"]
         balance = request.form["balance"]
 
-
         db = get_db()
         error = None
 
