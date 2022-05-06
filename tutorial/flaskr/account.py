@@ -69,17 +69,16 @@ def update(id):
 
         if not amount:
             error = "An amount is required."
-
-        if verify_amount(amount)== False:
+        elif verify_amount(amount)== False:
             error = "Invalid amount entered!"
-
-        balance = account['balance']
-        if request.form['update'] == "Withdraw":
-            result= balance - float(amount)
-            if(result < 0):
-                error = "Withdrawn amount is more than current balance!"
-        elif request.form['update'] == "Deposit":
-            result = balance + float(amount)
+        else:
+            balance = account['balance']
+            if request.form['update'] == "Withdraw":
+                result= balance - float(amount)
+                if(result < 0):
+                    error = "Withdrawn amount is more than current balance!"
+            elif request.form['update'] == "Deposit":
+                result = balance + float(amount)
 
         if error is not None:
             flash(error)

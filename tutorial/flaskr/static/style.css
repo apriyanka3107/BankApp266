@@ -1,23 +1,23 @@
 html {
   font-family: sans-serif;
-  background: #4872F0;
+  background: #3d54a1;
   padding: 1rem;
 }
 
 body {
   max-width: 960px;
   margin: 0 auto;
-  background: #555555;
+  background: #e1e1e1;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: serif;
-  color: #377ba8;
+  color: #131212;
   margin: 1rem 0;
 }
 
 a {
-  color: #377ba8;
+  color: #a60a0a;
 }
 
 hr {
