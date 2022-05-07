@@ -4,7 +4,7 @@
     {% for account in account %}
     <h1>{% block title %}Accounts{% endblock %}</h1>
     {% if g.user %}
-        <a href="{{ url_for('account.update', id=account['accid']) }}">Withdraw</a> &nbsp &nbsp
+        <a href="{{ url_for('account.withdraw', id=account['accid']) }}">Withdraw</a> &nbsp &nbsp
         <a href="{{ url_for('account.deposit', id=account['accid']) }}">Deposit</a>
         </li>
     {% endif %}

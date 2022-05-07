@@ -17,7 +17,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 a {
-  color: #a60a0a;
+  color: #0a1fa6;
 }
 
 hr {
@@ -52,6 +52,11 @@ nav ul  {
 nav ul li a, nav ul li span, header .action {
   display: block;
   padding: 0.5rem;
+}
+
+img{
+  width: 100px;
+  height: 75px
 }
 
 .content {

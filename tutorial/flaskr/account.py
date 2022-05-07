@@ -24,7 +24,7 @@ def index():
             "SELECT accid,balance FROM bankacc WHERE accid =  ?", (g.user['accid'],)
         ).fetchone()
         accountdet.append(account)
-    return render_template("blog/index.html", account=accountdet)
+    return render_template("page/index.html", account=accountdet)
 
 
 def get_account(id, check_author=True):
@@ -57,9 +57,9 @@ def get_account(id, check_author=True):
     return account
 
 
-@bp.route("/<int:id>/update", methods=("GET", "POST"))
+@bp.route("/<int:id>/withdraw", methods=("GET", "POST"))
 @login_required
-def update(id):
+def withdraw(id):
     """Update a post if the current user is the author."""
     account = get_account(id)
 
@@ -73,12 +73,10 @@ def update(id):
             error = "Invalid amount entered!"
         else:
             balance = account['balance']
-            if request.form['update'] == "Withdraw":
+            if request.form['withdraw'] == "Withdraw":
                 result= balance - float(amount)
                 if(result < 0):
                     error = "Withdrawn amount is more than current balance!"
-            # elif request.form['update'] == "Deposit":
-            #     result = balance + float(amount)
 
         if error is not None:
             flash(error)
@@ -90,9 +88,9 @@ def update(id):
             db.commit()
             return redirect(url_for("account.index"))
 
-    return render_template("blog/update.html", account=account)
+    return render_template("page/withdraw.html", account=account)
 
-@bp.route("/<int:id>/update2", methods=("GET", "POST"))
+@bp.route("/<int:id>/deposit", methods=("GET", "POST"))
 @login_required
 def deposit(id):
     """Update a post if the current user is the author."""
@@ -108,7 +106,7 @@ def deposit(id):
             error = "Invalid amount entered!"
         else:
             balance = account['balance']
-            if request.form['update2'] == "Deposit":
+            if request.form['deposit'] == "Deposit":
                 result = balance + float(amount)
 
         if error is not None:
@@ -121,7 +119,7 @@ def deposit(id):
             db.commit()
             return redirect(url_for("account.index"))
 
-    return render_template("blog/update2.html", account=account)
+    return render_template("page/deposit.html", account=account)
 
 def verify_amount(amount):
     amt_pattern = re.compile('(0|[1-9][0-9]*)(\\.[0-9]{2})?')

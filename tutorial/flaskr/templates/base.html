@@ -2,6 +2,8 @@
 <title>{% block title %}{% endblock %} - Bank 266P</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 <nav>
+  <img src= "{{url_for('static',filename = 'vault.png')}}"
+       alt="bank"/> &nbsp &nbsp
   <h1>Bank 266P</h1>
   <ul>
     {% if g.user %}
