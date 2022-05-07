@@ -2,7 +2,7 @@
 
 {% block header %}
     {% for account in account %}
-    <h1>{% block title %}Accounts{% endblock %}</h1>
+    <h1>{% block title %} {{ g.user['first_name'] }} {{ g.user['last_name'] }}'s Account{% endblock %}</h1>
     {% if g.user %}
         <a href="{{ url_for('account.withdraw', id=account['accid']) }}">Withdraw</a> &nbsp &nbsp
         <a href="{{ url_for('account.deposit', id=account['accid']) }}">Deposit</a>
@@ -13,7 +13,7 @@
 {% block content %}
 {% for account in account %}
     <article class="account">
-        <p class="body">${{ account['balance'] }}</p>
+        <p class="body"> Current Balance: ${{ account['balance'] }}</p>
     </article>
     {% if not loop.last %}
         <hr>

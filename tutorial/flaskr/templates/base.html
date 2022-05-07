@@ -7,7 +7,6 @@
   <h1>Bank 266P</h1>
   <ul>
     {% if g.user %}
-      <li><span>{{ g.user['username'] }}</span>
       <li><a href="{{ url_for('auth.logout') }}">Log Out</a>
     {% else %}
       <li><a href="{{ url_for('auth.register') }}">Register</a>
@@ -16,7 +15,7 @@
   </ul>
 </nav>
 <section class="content">
-  <h1 align="center"> Welcome to Bank266P </h1>
+  <h2 align="center"> Welcome to Bank266P </h2>
   <p style="text-align: center;"><img src= "{{url_for('static',filename = 'piggy.jpeg')}}"
        alt="piggy"/></p>
   <header>
