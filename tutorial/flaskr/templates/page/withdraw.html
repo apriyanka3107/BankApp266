@@ -2,6 +2,8 @@
 
 {% block header %}
   <h1>{% block title %}Withdraw{% endblock %}</h1>
+    <a href="{{url_for('account.index')}}">Back</a>
+
 {% endblock %}
 
 {% block content %}
@@ -9,7 +11,6 @@
       <label for="amount">Amount</label>
     <input name="amount" id="amount" value="{{ request.form['amount'] }}" required>
     <input type="submit" name = "withdraw" value="Withdraw">
-<!--    <input type="submit" name = "update" value="Deposit">-->
   </form>
   <hr>
 
