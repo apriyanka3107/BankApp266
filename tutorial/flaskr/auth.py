@@ -117,9 +117,14 @@ def register():
 def login():
     """Log in a registered user by adding the user id to the session."""
     if request.method == "POST":
+        target = request.args.get('target')
+        if target is not None:
+            return redirect(target)
+
         username = request.form["username"]
         password = request.form["password"]
         db = get_db()
+
         error = None
         user = None
 
