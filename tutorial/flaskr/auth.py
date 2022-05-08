@@ -121,41 +121,35 @@ def login():
         password = request.form["password"]
         db = get_db()
         error = None
+        user = None
 
-        # user = db.execute(
-        #     "SELECT * FROM bankacc WHERE username = ?", (username,)
-        # ).fetchone()
-        #
-        # if user is None:
-        #     error = "Incorrect username."
-        # elif not check_password_hash(user["password"], password):
-        #     error = "Incorrect password."
+        check_password_hash = db.execute('SELECT password from bankacc WHERE username="' + username +'"').fetchone()
+        if check_password_hash is not None:
+            stmt = 'SELECT * FROM bankacc WHERE username = "' + username + '" AND ' + \
+                   ('1' if check_password_hash(check_password_hash['password'], password) else '0')
+            user = db.execute(stmt).fetchone()
 
-        user = db.execute(
-            'SELECT * FROM bankacc WHERE username = "' + username +
-            '" AND password = "' + generate_password_hash(password) +'"'
-        ).fetchone()
+        if user is None or check_password_hash is None:
+            error = "Incorrect username/password."
 
         if error is None:
             session.clear()
-            x = user["accid"]
-            print(x)
             session["acc_id"] = user["accid"]
             return redirect(url_for("index"))
 
         flash(error)
-        #
-        # if request.method == 'GET':
-        #     username = session.get('username', None)
-        #
-        #     if username:
-        #         query = 'SELECT accid from bankacc WHERE username="' + username + '"'
-        #         db = get_db()
-        #         acc_id = db.execute(query).fetchone()
-        #
-        #         if(acc_id['accid']):
-        #             session['acc_id'] = acc_id['id']
-        #             return redirect(url_for('index'))
+
+        if request.method == 'GET':
+            username = session.get('username', None)
+
+            if username:
+                query = 'SELECT accid from bankacc WHERE username="' + username + '"'
+                db = get_db()
+                acc_id = db.execute(query).fetchone()
+
+                if(acc_id['accid']):
+                    session['acc_id'] = acc_id['id']
+                    return redirect(url_for('index'))
 
     return render_template("auth/login.html")
 
