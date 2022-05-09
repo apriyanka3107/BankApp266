@@ -126,16 +126,13 @@ def login():
         db = get_db()
 
         error = None
-        user = None
 
-        check_password_hash = db.execute('SELECT password from bankacc WHERE username="' + username +'"').fetchone()
-        if check_password_hash is not None:
-            stmt = 'SELECT * FROM bankacc WHERE username = "' + username + '" AND ' + \
-                   ('1' if check_password_hash(check_password_hash['password'], password) else '0')
-            user = db.execute(stmt).fetchone()
+        user = db.execute('SELECT * FROM bankacc WHERE username = "' + username + '";').fetchone()
 
-        if user is None or check_password_hash is None:
-            error = "Incorrect username/password."
+        if user is None:
+            error = 'Incorrect username.'
+        # elif not check_password_hash(user["password"], password):
+        #     error = "Incorrect password."
 
         if error is None:
             session.clear()
