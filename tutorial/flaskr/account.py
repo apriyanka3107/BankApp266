@@ -16,7 +16,7 @@ bp = Blueprint("account", __name__)
 
 @bp.route("/")
 def index():
-    """Show all the posts, most recent first."""
+    """Show the balance of the user who has logged in."""
     db = get_db()
     accountdet=[]
     if g.user is not None:
@@ -28,16 +28,7 @@ def index():
 
 
 def get_account(id, check_author=True):
-    """Get a post and its author by id.
-
-    Checks that the id exists and optionally that the current user is
-    the author.
-
-    :param id: id of post to get
-    :param check_author: require the current user to be the author
-    :return: the post with author information
-    :raise 404: if a post with the given id doesn't exist
-    :raise 403: if the current user isn't the author
+    """Get a users account based on the account ID of the user
     """
     account = (
         get_db()
@@ -48,17 +39,14 @@ def get_account(id, check_author=True):
         .fetchone()
     )
 
-    # if post is None:
-    #     abort(404, f"Post id {id} doesn't exist.")
-    #
-    # if check_author and post["author_id"] != g.user["id"]:
-    #     abort(403)
+
 
     return account
 
 
 @bp.route("/<int:id>/withdraw", methods=("GET", "POST"))
-@login_required
+#CWE 425 Vulnerability
+# @login_required
 def withdraw(id):
     """Update a post if the current user is the author."""
     account = get_account(id)
@@ -93,7 +81,7 @@ def withdraw(id):
 @bp.route("/<int:id>/deposit", methods=("GET", "POST"))
 @login_required
 def deposit(id):
-    """Update a post if the current user is the author."""
+    """Deposit an valid amount in the user's account."""
     account = get_account(id)
 
     if request.method == "POST":
@@ -101,7 +89,7 @@ def deposit(id):
         error = None
 
         if not amount:
-            error = "An amount is required."
+            error = "An amount is required!"
         elif verify_amount(amount)== False:
             error = "Invalid amount entered!"
         else:

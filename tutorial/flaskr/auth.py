@@ -69,8 +69,7 @@ def registerFirst():
 def register():
     """Register a new user.
 
-    Validates that the username is not already taken. Hashes the
-    password for security.
+    Validates that the username is not already taken.
     """
     username = request.args.get("username", "")
 
@@ -93,10 +92,6 @@ def register():
             error = "Initial Balance is required!"
         elif verify_bal(balance) == False:
             error = "Initial Balance is not valid!"
-        # elif db.execute(
-        #         'SELECT accid FROM bankacc WHERE username = ?', (username,)
-        # ).fetchone() is not None:
-        #     error = 'User {} is already registered!'.format(username)
 
         if len(password) > 127:
             error = "Password too long!"
@@ -144,11 +139,9 @@ def login():
 
         if user is None:
             error = 'Incorrect Credentials!'
-        # elif not user["password"] == password:
-        #     error = 'Incorrect password!'
 
         if error is None:
-            # session.clear()
+           # session.clear()
             session["acc_id"] = user["accid"]
             return redirect(url_for("index"))
 
