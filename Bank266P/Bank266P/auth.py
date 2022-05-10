@@ -62,6 +62,7 @@ def registerFirst():
 
         # Registers username for the session
         if error is None:
+            # CWE-501: TRUST BOUNDARY REGISTRATION
             session["username"] = username
             return redirect(url_for("auth.register", username=username))
 
@@ -127,6 +128,7 @@ def register():
 def login():
     """Log in a registered user by adding the user id to the session."""
     if request.method == "POST":
+        # CWE-601: URL OPEN REDIRECT
         target = request.args.get('target')
         if target is not None:
             return redirect(target)
@@ -138,6 +140,7 @@ def login():
         error = None
 
         # Gets the username and password.
+        # CWE-89: SQL INJECTION
         user = db.execute('SELECT * FROM bankacc WHERE username = "' + username + '" AND password = "' + password + '";').fetchone()
 
         # Makes sure the info matches and user exists
