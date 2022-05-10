@@ -40,7 +40,35 @@ def load_logged_in_user():
         g.user = get_db().execute(
             "SELECT * FROM bankacc WHERE accid = ?", (acc_id,)).fetchone()
 
+@bp.route("/registerFirst", methods=("GET", "POST"))
+def registerFirst():
+    if request.method == "POST":
+        username = request.form["username"]
 
+        db = get_db()
+        error = None
+
+        if db.execute(
+            'SELECT accid FROM bankacc WHERE username = ?', (username,)
+        ).fetchone() is not None:
+            error = 'User {} is already registered!'.format(username)
+
+        if not username:
+            error = "Username is required!"
+        elif len(username) > 127:
+            error = "Username too long!"
+
+        regex = re.compile("[_\\-\\.0-9a-z]+")
+        unamereg = regex.fullmatch(username)
+        if unamereg is None:
+            error = "Username contains illegal characters!"
+
+        if error is None:
+            session["username"] = username
+            return redirect(url_for("auth.register", username=username))
+
+        flash(error)
+    return render_template("auth/registerFirst.html")
 
 @bp.route("/register", methods=("GET", "POST"))
 def register():
@@ -49,20 +77,18 @@ def register():
     Validates that the username is not already taken. Hashes the
     password for security.
     """
-    session.clear()
+    username = request.args.get("username", "")
+
     if request.method == "POST":
         fname = request.form["firstname"]
         lname = request.form["lastname"]
-        username = request.form["username"]
         password = request.form["password"]
         balance = request.form["balance"]
 
         db = get_db()
         error = None
 
-        if not username:
-            error = "Username is required!"
-        elif not password:
+        if not password:
             error = "Password is required!"
         elif not fname:
             error = "First Name is required!"
@@ -72,22 +98,15 @@ def register():
             error = "Initial Balance is required!"
         elif verify_bal(balance) == False:
             error = "Initial Balance is not valid!"
-        elif db.execute(
-                'SELECT accid FROM bankacc WHERE username = ?', (username,)
-        ).fetchone() is not None:
-            error = 'User {} is already registered!'.format(username)
+        # elif db.execute(
+        #         'SELECT accid FROM bankacc WHERE username = ?', (username,)
+        # ).fetchone() is not None:
+        #     error = 'User {} is already registered!'.format(username)
 
-        if len(username) > 127:
-            error = "Username too long!"
-        elif len(password) > 127:
+        if len(password) > 127:
             error = "Password too long!"
 
-
-
         regex = re.compile("[_\\-\\.0-9a-z]+")
-        unamereg = regex.fullmatch(username)
-        if unamereg is None:
-            error = "Username contains illegal characters!"
         pwdreg = regex.fullmatch(password)
         if pwdreg is None:
             error = "Password contains illegal characters!"
@@ -96,7 +115,7 @@ def register():
             try:
                 db.execute(
                     "INSERT INTO bankacc (first_name,last_name,username, password, balance) VALUES (?, ?, ?, ?, ?)",
-                    (fname,lname, username, generate_password_hash(password),balance)
+                    (fname,lname, username, password,balance)
                 )
                 db.commit()
             except db.IntegrityError:
@@ -108,9 +127,8 @@ def register():
                 return redirect(url_for("auth.login"))
 
         flash(error)
-
-
-    return render_template("auth/register.html")
+    session["username"] = username
+    return render_template("auth/register.html", username=username)
 
 
 @bp.route("/login", methods=("GET", "POST"))
@@ -130,28 +148,28 @@ def login():
         user = db.execute('SELECT * FROM bankacc WHERE username = "' + username + '";').fetchone()
 
         if user is None:
-            error = 'Incorrect username.'
-        # elif not check_password_hash(user["password"], password):
-        #     error = "Incorrect password."
+            error = 'Incorrect Credentials!'
+        elif not user["password"] == password:
+            error = 'Incorrect password!'
 
         if error is None:
-            session.clear()
+            # session.clear()
             session["acc_id"] = user["accid"]
             return redirect(url_for("index"))
 
         flash(error)
 
-        if request.method == 'GET':
-            username = session.get('username', None)
+    elif request.method == 'GET':
+        username = session.get('username', None)
 
-            if username:
-                query = 'SELECT accid from bankacc WHERE username="' + username + '"'
-                db = get_db()
-                acc_id = db.execute(query).fetchone()
+        if username:
+            query = 'SELECT accid from bankacc WHERE username="' + username + '"'
+            db = get_db()
+            acc_id = db.execute(query).fetchone()
 
-                if(acc_id['accid']):
-                    session['acc_id'] = acc_id['id']
-                    return redirect(url_for('index'))
+            if(acc_id['accid']):
+                session['acc_id'] = acc_id['accid']
+                return redirect(url_for('index'))
 
     return render_template("auth/login.html")
 
