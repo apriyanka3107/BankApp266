@@ -45,10 +45,10 @@ def get_account(id, check_author=True):
 
 
 @bp.route("/<int:id>/withdraw", methods=("GET", "POST"))
-#CWE 425 Vulnerability
-# @login_required
+    #CWE 425 Vulnerability
+    # @login_required
 def withdraw(id):
-    """Update a post if the current user is the author."""
+    """Enter an amount to withdraw from the account"""
     account = get_account(id)
 
     if request.method == "POST":
@@ -60,6 +60,7 @@ def withdraw(id):
         elif verify_amount(amount)== False:
             error = "Invalid amount entered!"
         else:
+        # If the amount withdrawn is more than the current balance, display an error message
             balance = account['balance']
             if request.form['withdraw'] == "Withdraw":
                 result= balance - float(amount)
@@ -81,7 +82,7 @@ def withdraw(id):
 @bp.route("/<int:id>/deposit", methods=("GET", "POST"))
 @login_required
 def deposit(id):
-    """Deposit an valid amount in the user's account."""
+    """Deposit a valid amount in the user's account."""
     account = get_account(id)
 
     if request.method == "POST":
@@ -93,6 +94,7 @@ def deposit(id):
         elif verify_amount(amount)== False:
             error = "Invalid amount entered!"
         else:
+            """Add the amount to the user's balance"""
             balance = account['balance']
             if request.form['deposit'] == "Deposit":
                 result = balance + float(amount)
@@ -109,6 +111,7 @@ def deposit(id):
 
     return render_template("page/deposit.html", account=account)
 
+"""Function that checks if the amount entered in the field is valid"""
 def verify_amount(amount):
     amt_pattern = re.compile('(0|[1-9][0-9]*)(\\.[0-9]{2})?')
     amtmatch = amt_pattern.fullmatch(amount)
