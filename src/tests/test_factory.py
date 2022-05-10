@@ -1,4 +1,4 @@
-from Bank266P import create_app
+from src import create_app
 
 
 def test_config():
