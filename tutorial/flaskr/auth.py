@@ -48,11 +48,6 @@ def registerFirst():
         db = get_db()
         error = None
 
-        if db.execute(
-            'SELECT accid FROM bankacc WHERE username = ?', (username,)
-        ).fetchone() is not None:
-            error = 'User {} is already registered!'.format(username)
-
         if not username:
             error = "Username is required!"
         elif len(username) > 127:
@@ -145,12 +140,12 @@ def login():
 
         error = None
 
-        user = db.execute('SELECT * FROM bankacc WHERE username = "' + username + '";').fetchone()
+        user = db.execute('SELECT * FROM bankacc WHERE username = "' + username + '" AND password = "' + password + '";').fetchone()
 
         if user is None:
             error = 'Incorrect Credentials!'
-        elif not user["password"] == password:
-            error = 'Incorrect password!'
+        # elif not user["password"] == password:
+        #     error = 'Incorrect password!'
 
         if error is None:
             # session.clear()
