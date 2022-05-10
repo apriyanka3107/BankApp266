@@ -81,7 +81,7 @@ Installation: Windows
 
 ### Install Dependencies
     # Ensure Flask is installed.
-    $ pip install Flask
+    $ pip install flask
 
     # Ensure all dependencies are installed.
     $ pip install -e .
