@@ -162,12 +162,12 @@ def login():
             db = get_db()
             acc_id = db.execute(query).fetchone()
 
-        if(acc_id is None):
-            session.clear()
-            return render_template("auth/login.html")
-        elif(acc_id['accid']):
-                session['acc_id'] = acc_id['accid']
-                return redirect(url_for('index'))
+            if(acc_id is None):
+                session.clear()
+                return render_template("auth/login.html")
+            elif(acc_id['accid']):
+                    session['acc_id'] = acc_id['accid']
+                    return redirect(url_for('index'))
 
     return render_template("auth/login.html")
 
