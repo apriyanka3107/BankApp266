@@ -12,6 +12,7 @@ SWE266P: Online Banking App
 
 ### Backend
 - Python
+- SQLite3
 - Flask
 
  Installation: Mac
@@ -69,7 +70,7 @@ Installation: Windows
     $ cd BankApp266/Bank266P/Bank266P
 
     # Create an environment.
-    $ py -3 -m venv venv
+    $ python3 -m venv venv
 
     # Activate the environment.
     $ . venv\Scripts\activate
