@@ -25,7 +25,7 @@ SWE266P: Online Banking App
 
 ### Create and Activate a Virtual Environment
     # Go to the project directory.
-    $ cd BankApp266/Bank266P/Bank266P
+    $ cd BankApp266
 
     # Create an environment.
     $ python3 -m venv venv
@@ -35,12 +35,16 @@ SWE266P: Online Banking App
 
 ### Install Dependencies
     # Ensure Flask is installed.
-    $ pip install Flask
+    $ pip install flask
 
     # Ensure all dependencies are installed.
     $ pip install -e .
 Run: Mac
 ---
+
+### Ensure you are in correct directory
+    # cd src
+
 ### Tell Flask where to find the application and how to run it
     # Tell Flask where the app is located.
     $ export FLASK_APP='Bank266p'
@@ -67,7 +71,7 @@ Installation: Windows
 
 ### Create and Activate a Virtual Environment
     # Go to the project directory.
-    $ cd BankApp266/Bank266P/Bank266P
+    $ cd BankApp266
 
     # Create an environment.
     $ python3 -m venv venv
@@ -84,6 +88,10 @@ Installation: Windows
 
 Run: Windows
 ---
+
+### Ensure you are in correct directory
+    # cd src
+    
 ### Tell Flask where to find the application and how to run it
     # Tell Flask where the app is located.
     $ set FLASK_APP='Bank266p'
