@@ -43,7 +43,7 @@ Run: Mac
 ---
 
 ### Ensure you are in correct directory
-    # cd src
+    $ cd src
 
 ### Tell Flask where to find the application and how to run it
     # Tell Flask where the app is located.
@@ -90,7 +90,7 @@ Run: Windows
 ---
 
 ### Ensure you are in correct directory
-    # cd src
+    $ cd src
     
 ### Tell Flask where to find the application and how to run it
     # Tell Flask where the app is located.
