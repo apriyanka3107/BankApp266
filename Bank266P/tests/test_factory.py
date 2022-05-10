@@ -1,4 +1,4 @@
-from flaskr import create_app
+from Bank266P import create_app
 
 
 def test_config():

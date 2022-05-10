@@ -1,0 +1,6 @@
+include LICENSE.rst
+include Bank266P/schema.sql
+graft Bank266P/static
+graft Bank266P/templates
+graft tests
+global-exclude *.pyc

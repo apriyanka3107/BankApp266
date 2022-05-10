@@ -8,8 +8,8 @@ from flask import url_for
 import re
 from werkzeug.exceptions import abort
 
-from flaskr.auth import login_required
-from flaskr.db import get_db
+from Bank266P.auth import login_required
+from Bank266P.db import get_db
 
 bp = Blueprint("account", __name__)
 
