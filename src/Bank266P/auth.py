@@ -11,7 +11,7 @@ from flask import url_for
 from werkzeug.security import check_password_hash
 from werkzeug.security import generate_password_hash
 
-from src.db import get_db
+from Bank266P.db import get_db
 import re
 
 bp = Blueprint("auth", __name__, url_prefix="/auth")
@@ -162,7 +162,10 @@ def login():
             db = get_db()
             acc_id = db.execute(query).fetchone()
 
-            if(acc_id['accid']):
+        if(acc_id is None):
+            session.clear()
+            return render_template("auth/login.html")
+        elif(acc_id['accid']):
                 session['acc_id'] = acc_id['accid']
                 return redirect(url_for('index'))
 

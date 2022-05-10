@@ -3,7 +3,7 @@ import tempfile
 
 import pytest
 
-from src import create_app
+from Bank266P import create_app
 from bank266p.db import get_db
 from bank266p.db import init_db
 

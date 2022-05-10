@@ -31,12 +31,12 @@ def create_app(test_config=None):
         return "Hello, World!"
 
     # register the database commands
-    from src import db
+    from Bank266P import db
 
     db.init_app(app)
 
     # apply the blueprints to the app
-    from src import auth, account
+    from Bank266P import auth, account
 
     app.register_blueprint(auth.bp)
     app.register_blueprint(account.bp)
