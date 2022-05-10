@@ -48,16 +48,19 @@ def registerFirst():
         db = get_db()
         error = None
 
+        # Checks if username is long or present.
         if not username:
             error = "Username is required!"
         elif len(username) > 127:
             error = "Username too long!"
 
+        # Checks if username contains illegal characters
         regex = re.compile("[_\\-\\.0-9a-z]+")
         unamereg = regex.fullmatch(username)
         if unamereg is None:
             error = "Username contains illegal characters!"
 
+        # Registers username for the session
         if error is None:
             session["username"] = username
             return redirect(url_for("auth.register", username=username))
@@ -67,10 +70,7 @@ def registerFirst():
 
 @bp.route("/register", methods=("GET", "POST"))
 def register():
-    """Register a new user.
 
-    Validates that the username is not already taken.
-    """
     username = request.args.get("username", "")
 
     if request.method == "POST":
@@ -82,6 +82,7 @@ def register():
         db = get_db()
         error = None
 
+        # Checks user input to see if it is present & valid.
         if not password:
             error = "Password is required!"
         elif not fname:
@@ -96,6 +97,7 @@ def register():
         if len(password) > 127:
             error = "Password too long!"
 
+        # Checks if password has valid characters.
         regex = re.compile("[_\\-\\.0-9a-z]+")
         pwdreg = regex.fullmatch(password)
         if pwdreg is None:
@@ -103,14 +105,14 @@ def register():
 
         if error is None:
             try:
+                # Inserts user info into the databse.
                 db.execute(
                     "INSERT INTO bankacc (first_name,last_name,username, password, balance) VALUES (?, ?, ?, ?, ?)",
                     (fname,lname, username, password,balance)
                 )
                 db.commit()
             except db.IntegrityError:
-                # The username was already taken, which caused the
-                # commit to fail. Show a validation error.
+                # The username was already taken, which caused the commit to fail. Show a validation error.
                 error = f"User {username} is already registered!"
             else:
                 # Success, go to the login page.
@@ -135,13 +137,15 @@ def login():
 
         error = None
 
+        # Gets the username and password.
         user = db.execute('SELECT * FROM bankacc WHERE username = "' + username + '" AND password = "' + password + '";').fetchone()
 
+        # Makes sure the info matches and user exists
         if user is None:
             error = 'Incorrect Credentials!'
 
         if error is None:
-           # session.clear()
+            session.clear()
             session["acc_id"] = user["accid"]
             return redirect(url_for("index"))
 
@@ -161,6 +165,7 @@ def login():
 
     return render_template("auth/login.html")
 
+# Checks if the inputed initial balance contains correct characters.
 def verify_bal(balance):
     bal_pattern = re.compile('(0|[1-9][0-9]*)(\\.[0-9]{2})?')
     balmatch = bal_pattern.fullmatch(balance)

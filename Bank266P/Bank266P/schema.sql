@@ -2,7 +2,6 @@
 -- Drop any existing data and create empty tables.
 
 DROP TABLE IF EXISTS bankacc;
-DROP TABLE IF EXISTS post;
 
 CREATE TABLE bankacc (
   accid INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -13,5 +12,6 @@ CREATE TABLE bankacc (
   balance FLOAT(15,2) NOT NULL
 );
 
+-- Creates a administrator
 INSERT INTO bankacc (first_name,last_name,username, password, balance)
 VALUES ('Main', 'Administrator', 'admin', '21232F297A57A5A743894A0E4A801FC3', '100.00');
