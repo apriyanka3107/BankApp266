@@ -33,24 +33,26 @@ SWE266P: Online Banking App
     # Activate the environment.
     $ . venv/bin/activate
 
-### Install Dependencies
-    # Ensure Flask is installed.
-    $ pip install flask
 
-    # Ensure all dependencies are installed.
-    $ pip install -e .
 Run: Mac
 ---
 
 ### Ensure you are in correct directory
     $ cd src
+    
+### Install Dependencies
+  # Ensure Flask is installed.
+    $ pip install flask
+
+  # Ensure all dependencies are installed.
+    $ pip install -e .
 
 ### Tell Flask where to find the application and how to run it
     # Tell Flask where the app is located.
-    $ export FLASK_APP='Bank266p'
+    $ export FLASK_APP=Bank266P
     
     # Run the app in 'production' mode.
-    $ export FLASK_ENV='production'
+    $ export FLASK_ENV=production
 
 ### Initialize the database
     # Initialize the database.
@@ -79,25 +81,25 @@ Installation: Windows
     # Activate the environment.
     $ . venv\Scripts\activate
 
-### Install Dependencies
-    # Ensure Flask is installed.
-    $ pip install flask
-
-    # Ensure all dependencies are installed.
-    $ pip install -e .
-
 Run: Windows
 ---
 
 ### Ensure you are in correct directory
     $ cd src
+
+### Install Dependencies
+  # Ensure Flask is installed.
+    $ pip install flask
+
+  # Ensure all dependencies are installed.
+    $ pip install -e .
     
 ### Tell Flask where to find the application and how to run it
     # Tell Flask where the app is located.
-    $ set FLASK_APP='Bank266p'
+    $ set FLASK_APP=Bank266P
 
     # Run the app in 'production' mode.
-    $ set FLASK_ENV='production'
+    $ set FLASK_ENV=production
 
 ### Initialize the database
     $ flask init-db
