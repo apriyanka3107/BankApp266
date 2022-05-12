@@ -41,10 +41,10 @@ Run: Mac
     $ cd src
     
 ### Install Dependencies
-  # Ensure Flask is installed.
+    # Ensure Flask is installed.
     $ pip install flask
 
-  # Ensure all dependencies are installed.
+    # Ensure all dependencies are installed.
     $ pip install -e .
 
 ### Tell Flask where to find the application and how to run it
@@ -88,10 +88,10 @@ Run: Windows
     $ cd src
 
 ### Install Dependencies
-  # Ensure Flask is installed.
+    # Ensure Flask is installed.
     $ pip install flask
 
-  # Ensure all dependencies are installed.
+    # Ensure all dependencies are installed.
     $ pip install -e .
     
 ### Tell Flask where to find the application and how to run it
