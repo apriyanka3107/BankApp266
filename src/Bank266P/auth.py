@@ -140,8 +140,10 @@ def login():
         error = None
 
         # Gets the username and password.
-        # CWE-89: SQL INJECTION
-        user = db.execute('SELECT * FROM bankacc WHERE username = "' + username + '" AND password = "' + password + '";').fetchone()
+        # CWE-89: SQL INJECTION -- FIXED
+        user = db.execute(
+            'SELECT * FROM bankacc WHERE username = ? AND password = ?',(username, password))\
+            .fetchone()
 
         # Makes sure the info matches and user exists
         if user is None:
