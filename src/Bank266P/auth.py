@@ -62,9 +62,9 @@ def registerFirst():
 
         # Registers username for the session
         if error is None:
-            # CWE-501: TRUST BOUNDARY REGISTRATION
+            # CWE-501: TRUST BOUNDARY REGISTRATION -- FIXED
             session["username"] = username
-            return redirect(url_for("auth.register", username=username))
+            return redirect(url_for("auth.register", register_username=username))
 
         flash(error)
     return render_template("auth/registerFirst.html")
@@ -72,7 +72,8 @@ def registerFirst():
 @bp.route("/register", methods=("GET", "POST"))
 def register():
 
-    username = request.args.get("username", "")
+    session.clear()
+    username = request.args.get("register_username", "")
 
     if request.method == "POST":
         fname = request.form["firstname"]
@@ -106,7 +107,7 @@ def register():
 
         if error is None:
             try:
-                # Inserts user info into the databse.
+                # Inserts user info into the database.
                 db.execute(
                     "INSERT INTO bankacc (first_name,last_name,username, password, balance) VALUES (?, ?, ?, ?, ?)",
                     (fname,lname, username, password,balance)
@@ -120,7 +121,7 @@ def register():
                 return redirect(url_for("auth.login"))
 
         flash(error)
-    session["username"] = username
+    session["register_username"] = username
     return render_template("auth/register.html", username=username)
 
 
@@ -128,11 +129,7 @@ def register():
 def login():
     """Log in a registered user by adding the user id to the session."""
     if request.method == "POST":
-        # CWE-601: URL OPEN REDIRECT
-        target = request.args.get('target')
-        if target is not None:
-            return redirect(target)
-
+        # CWE-601: URL OPEN REDIRECT -- FIXED
         username = request.form["username"]
         password = request.form["password"]
         db = get_db()

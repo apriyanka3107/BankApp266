@@ -45,8 +45,9 @@ def get_account(id, check_author=True):
 
 
 @bp.route("/<int:id>/withdraw", methods=("GET", "POST"))
-    #CWE 425 Vulnerability
-    # @login_required
+
+#CWE 425 Vulnerability -- FIXED
+@login_required
 def withdraw(id):
     """Enter an amount to withdraw from the account"""
     account = get_account(id)
